@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Snake Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #1a202c; /* Tailwind gray-900 */
+            color: #a0aec0; /* Tailwind gray-500 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevents scrollbars during game */
+        }
+        #gameContainer {
+            background-color: #2d3748; /* Tailwind gray-800 */
+            border-radius: 0.75rem; /* Tailwind rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind shadow-lg */
+            padding: 1.5rem; /* Tailwind p-6 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            background-color: #080808; /* Darker background for the game area */
+            border: 2px solid #4a5568; /* Tailwind gray-600 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            display: block; /* Remove extra space below canvas */
+        }
+        .score-board {
+            font-size: 1.25rem; /* Tailwind text-xl */
+            margin-bottom: 1rem; /* Tailwind mb-4 */
+            color: #e2e8f0; /* Tailwind gray-300 */
+        }
+        .controls {
+            margin-top: 1.5rem; /* Tailwind mt-6 */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem; /* Tailwind gap-2 */
+            width: 150px; /* Fixed width for control layout */
+        }
+        .controls button {
+            background-color: #4a5568; /* Tailwind gray-600 */
+            color: #e2e8f0; /* Tailwind gray-300 */
+            border: none;
+            padding: 0.75rem; /* Tailwind p-3 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            font-family: 'Press Start 2P', cursive;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+        .controls button:hover {
+            background-color: #718096; /* Tailwind gray-500 */
+        }
+        .controls button:active {
+            transform: translateY(1px);
+        }
+        .controls .empty {
+            visibility: hidden;
+        }
+        #messageBox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(45, 55, 72, 0.95); /* Tailwind gray-800 with opacity */
+            color: #e2e8f0; /* Tailwind gray-300 */
+            padding: 2rem; /* Tailwind p-8 */
+            border-radius: 0.75rem; /* Tailwind rounded-xl */
+            text-align: center;
+            z-index: 100;
+            display: none; /* Hidden by default */
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        #messageBox h2 {
+            font-size: 1.875rem; /* Tailwind text-3xl */
+            margin-bottom: 1rem; /* Tailwind mb-4 */
+        }
+        #messageBox p {
+            font-size: 1.125rem; /* Tailwind text-lg */
+            margin-bottom: 1.5rem; /* Tailwind mb-6 */
+        }
+        #messageBox button {
+            background-color: #68d391; /* Tailwind green-400 */
+            color: #1a202c; /* Tailwind gray-900 */
+            padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            font-family: 'Press Start 2P', cursive;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+        #messageBox button:hover {
+            background-color: #9ae6b4; /* Tailwind green-300 */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            #gameContainer {
+                padding: 1rem;
+            }
+            .score-board {
+                font-size: 1rem;
+            }
+            .controls {
+                width: 120px;
+            }
+            .controls button {
+                padding: 0.5rem;
+            }
+            #messageBox {
+                padding: 1.5rem;
+                width: 90%;
+            }
+            #messageBox h2 {
+                font-size: 1.5rem;
+            }
+            #messageBox p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div class="score-board">Score: <span id="score">0</span></div>
+        <canvas id="gameCanvas"></canvas>
+        <div class="controls">
+            <div class="empty"></div>
+            <button id="upBtn">▲</button>
+            <div class="empty"></div>
+            <button id="leftBtn">◄</button>
+            <div class="empty"></div>
+            <button id="rightBtn">►</button>
+            <div class="empty"></div>
+            <button id="downBtn">▼</button>
+            <div class="empty"></div>
+        </div>
+    </div>
+
+    <div id="messageBox">
+        <h2 id="messageTitle">Game Over!</h2>
+        <p id="messageText">Your score was: <span id="finalScore">0</span></p>
+        <button id="restartButton">Play Again</button>
+    </div>
+
+    <script>
+        // Game Canvas and Context
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game Elements
+        const scoreDisplay = document.getElementById('score');
+        const messageBox = document.getElementById('messageBox');
+        const messageTitle = document.getElementById('messageTitle');
+        const messageText = document.getElementById('messageText');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const restartButton = document.getElementById('restartButton');
+
+        // Control Buttons
+        const upButton = document.getElementById('upBtn');
+        const downButton = document.getElementById('downBtn');
+        const leftButton = document.getElementById('leftBtn');
+        const rightButton = document.getElementById('rightBtn');
+
+        // Game constants
+        const gridSize = 20; // Size of each grid cell (and snake segment/food)
+        let tileCountX = 20; // Number of cells horizontally
+        let tileCountY = 20; // Number of cells vertically
+
+        // Game state variables
+        let snake = [];
+        let positionX, positionY;
+        let velocityX, velocityY;
+        let foodX, foodY;
+        let score;
+        let gameInterval;
+        let gameSpeed = 120; // Milliseconds per game update (lower is faster)
+        let changingDirection = false; // To prevent rapid 180-degree turns
+
+        // Function to set canvas dimensions based on available space or fixed tile count
+        function resizeCanvas() {
+            const container = document.getElementById('gameContainer');
+            const controlsHeight = document.querySelector('.controls').offsetHeight;
+            const scoreBoardHeight = document.querySelector('.score-board').offsetHeight;
+            // Calculate available height, considering padding and other elements
+            const availableHeight = window.innerHeight - container.offsetTop - controlsHeight - scoreBoardHeight - 80; // 80 for some margin
+            const availableWidth = Math.min(window.innerWidth * 0.9, 600); // Max width of 600px or 90% of window
+
+            // Determine tile count based on a fixed grid size
+            tileCountX = Math.floor(Math.min(availableWidth, availableHeight) / gridSize);
+            tileCountY = tileCountX; // Keep it square for simplicity
+
+            canvas.width = tileCountX * gridSize;
+            canvas.height = tileCountY * gridSize;
+
+            // If game is not running, initialize it
+            if (!gameInterval) {
+                initializeGame();
+            } else {
+                // If game is running, we might need to adjust food position if it's outside new bounds
+                if (foodX >= tileCountX) foodX = tileCountX -1;
+                if (foodY >= tileCountY) foodY = tileCountY -1;
+            }
+        }
+
+
+        // Initialize game (or reset)
+        function initializeGame() {
+            // Clear any existing game interval
+            if (gameInterval) clearInterval(gameInterval);
+
+            // Initial snake position and velocity
+            snake = [{ x: Math.floor(tileCountX / 2), y: Math.floor(tileCountY / 2) }]; // Start in the middle
+            positionX = snake[0].x;
+            positionY = snake[0].y;
+            velocityX = 0;
+            velocityY = 0; // Start stationary, player makes first move
+
+            // Initial score
+            score = 0;
+            scoreDisplay.textContent = score;
+
+            // Place initial food
+            placeFood();
+
+            // Hide game over message
+            messageBox.style.display = 'none';
+
+            // Start the game loop
+            gameInterval = setInterval(gameLoop, gameSpeed);
+        }
+
+        // Main game loop
+        function gameLoop() {
+            changingDirection = false; // Allow direction change for next frame
+
+            // Update snake position based on velocity
+            positionX += velocityX;
+            positionY += velocityY;
+
+            // Wall collision detection
+            if (positionX < 0 || positionX >= tileCountX || positionY < 0 || positionY >= tileCountY) {
+                gameOver();
+                return;
+            }
+
+            // Self-collision detection
+            for (let i = 0; i < snake.length; i++) {
+                if (snake[i].x === positionX && snake[i].y === positionY) {
+                    // Allow starting without moving into self
+                    if (velocityX !== 0 || velocityY !== 0) {
+                         gameOver();
+                         return;
+                    }
+                }
+            }
+
+            // Update snake body
+            snake.push({ x: positionX, y: positionY });
+            while (snake.length > score + 1) { // +1 because snake starts with 1 segment
+                snake.shift();
+            }
+
+            // Food consumption
+            if (positionX === foodX && positionY === foodY) {
+                score++;
+                scoreDisplay.textContent = score;
+                placeFood();
+                // Optional: Increase speed as score increases
+                // if (score % 5 === 0 && gameSpeed > 50) {
+                //     gameSpeed -= 10;
+                //     clearInterval(gameInterval);
+                //     gameInterval = setInterval(gameLoop, gameSpeed);
+                // }
+            }
+
+            drawGame();
+        }
+
+        // Draw everything on the canvas
+        function drawGame() {
+            // Clear canvas (draw background)
+            ctx.fillStyle = '#080808'; // Game area background
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw snake
+            ctx.fillStyle = '#68d391'; // Tailwind green-400 for snake
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2); // -2 for grid lines
+            });
+
+            // Draw food
+            ctx.fillStyle = '#f56565'; // Tailwind red-500 for food
+            ctx.fillRect(foodX * gridSize, foodY * gridSize, gridSize -2 , gridSize -2);
+        }
+
+        // Place food randomly on the grid
+        function placeFood() {
+            foodX = Math.floor(Math.random() * tileCountX);
+            foodY = Math.floor(Math.random() * tileCountY);
+
+            // Ensure food doesn't spawn on the snake
+            for (let i = 0; i < snake.length; i++) {
+                if (snake[i].x === foodX && snake[i].y === foodY) {
+                    placeFood(); // Recursively try again
+                    return;
+                }
+            }
+        }
+
+        // Handle game over
+        function gameOver() {
+            clearInterval(gameInterval);
+            gameInterval = null; // Indicate game is not running
+            finalScoreDisplay.textContent = score;
+            messageTitle.textContent = "Game Over!";
+            messageText.innerHTML = `Your score was: <span id="finalScore">${score}</span>`;
+            messageBox.style.display = 'flex';
+        }
+
+        // Handle keyboard input
+        function handleKeyDown(event) {
+            if (changingDirection) return; // Prevent changing direction multiple times per frame
+
+            const keyPressed = event.key.toLowerCase();
+
+            if ((keyPressed === 'arrowup' || keyPressed === 'w') && velocityY === 0) {
+                velocityX = 0;
+                velocityY = -1;
+                changingDirection = true;
+            } else if ((keyPressed === 'arrowdown' || keyPressed === 's') && velocityY === 0) {
+                velocityX = 0;
+                velocityY = 1;
+                changingDirection = true;
+            } else if ((keyPressed === 'arrowleft' || keyPressed === 'a') && velocityX === 0) {
+                velocityX = -1;
+                velocityY = 0;
+                changingDirection = true;
+            } else if ((keyPressed === 'arrowright' || keyPressed === 'd') && velocityX === 0) {
+                velocityX = 1;
+                velocityY = 0;
+                changingDirection = true;
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('keydown', handleKeyDown);
+        restartButton.addEventListener('click', () => {
+            resizeCanvas(); // Recalculate dimensions
+            initializeGame(); // Then initialize
+        });
+
+        // Touch Controls
+        upButton.addEventListener('click', () => {
+            if (velocityY === 0) { velocityX = 0; velocityY = -1; changingDirection = true;}
+        });
+        downButton.addEventListener('click', () => {
+            if (velocityY === 0) { velocityX = 0; velocityY = 1; changingDirection = true;}
+        });
+        leftButton.addEventListener('click', () => {
+            if (velocityX === 0) { velocityX = -1; velocityY = 0; changingDirection = true;}
+        });
+        rightButton.addEventListener('click', () => {
+            if (velocityX === 0) { velocityX = 1; velocityY = 0; changingDirection = true;}
+        });
+
+
+        // Initial setup
+        window.addEventListener('resize', resizeCanvas);
+        window.onload = () => {
+            resizeCanvas(); // Set initial size
+            // Don't auto-start, let user make the first move or click restart
+            // initializeGame(); // Game starts when script loads
+            // Instead, draw a static initial state
+            positionX = Math.floor(tileCountX / 2);
+            positionY = Math.floor(tileCountY / 2);
+            snake = [{ x: positionX, y: positionY }];
+            placeFood();
+            drawGame();
+            messageTitle.textContent = "Snake Game";
+            messageText.innerHTML = "Use arrow keys or on-screen buttons to play.<br>Click 'Play' to start!";
+            finalScoreDisplay.textContent = "0"; // Not really final score here, just placeholder
+            restartButton.textContent = "Play!";
+            messageBox.style.display = 'flex';
+        };
+
+    </script>
+</body>
+</html>
