@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Advertising: Media Landscape & Trends 2024-2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8; /* Light bluish gray */
+            color: #2D3748; /* Dark Gray */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Default max-width, can be overridden by Tailwind */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height */
+            max-height: 450px; /* Max height */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .stat-card {
+            background-color: #FFFFFF;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .section-title {
+            color: #073B4C; /* Dark Slate Blue */
+            border-bottom: 3px solid #118AB2; /* Cerulean Blue */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #118AB2; /* Cerulean Blue */
+        }
+        .kpi-label {
+            font-size: 0.875rem;
+            color: #4A5568; /* Tailwind gray-600 */
+        }
+        .nav-item {
+            transition: color 0.3s ease;
+        }
+        .nav-item:hover {
+            color: #FF6B6B; /* Coral Red */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-[#073B4C] text-white p-6 shadow-lg">
+        <div class="container mx-auto">
+            <h1 class="text-3xl md:text-4xl font-bold text-center">Navigating the Evolving Media Landscape</h1>
+            <p class="text-lg md:text-xl text-center mt-2 text-[#FFD166]">A Deep Dive for Political Advertisers: 2024-2025 Insights</p>
+        </div>
+    </header>
+
+    <!--
+    <nav class="sticky top-0 bg-white shadow-md z-50 hidden md:block">
+        <div class="container mx-auto py-3 px-6">
+            <ul class="flex space-x-6 justify-center">
+                <li><a href="#section1" class="text-[#073B4C] font-semibold nav-item">Media Shifts</a></li>
+                <li><a href="#section2" class="text-[#073B4C] font-semibold nav-item">Ad Spend</a></li>
+                <li><a href="#section3" class="text-[#073B4C] font-semibold nav-item">Audiences</a></li>
+                <li><a href="#section4" class="text-[#073B4C] font-semibold nav-item">Platform Policies</a></li>
+                <li><a href="#section5" class="text-[#073B4C] font-semibold nav-item">Future Outlook</a></li>
+            </ul>
+        </div>
+    </nav>
+    -->
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section class="mb-12 text-center">
+            <p class="text-lg md:text-xl mb-4">The American media landscape is undergoing a profound transformation, with audiences migrating from traditional platforms to a diverse array of digital channels. This infographic synthesizes key data from the "Navigating the Evolving Media Landscape" report, providing critical insights for political advertisers aiming to craft successful campaign strategies in 2024 and beyond.</p>
+        </section>
+
+        <section id="section1" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold section-title">Section 1: The Shifting Media Consumption Paradigm</h2>
+            <p class="mb-6 text-md">Understanding current media consumption patterns is paramount. While linear TV retains a presence, streaming platforms, YouTube, and social media are increasingly dominant, especially for news and entertainment among key voter demographics.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="stat-card lg:col-span-2">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">Linear TV vs. Streaming: Share of Total TV Time (Mar 2025)</h3>
+                    <p class="text-sm text-gray-600 mb-4">Nielsen data shows streaming nearing parity with traditional broadcast and cable in overall viewing time, highlighting a major audience shift.</p>
+                    <div class="chart-container h-72 md:h-80">
+                        <canvas id="totalTvTimeChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: Nielsen (March 2025)</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">Ad-Supported Viewing Time (Mar 2025)</h3>
+                    <p class="text-sm text-gray-600 mb-4">Linear TV still commands a larger share of ad-supported viewing, making it relevant for broad ad exposure.</p>
+                    <div class="chart-container h-60">
+                        <canvas id="adSupportedTimeChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: Nielsen (March 2025)</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">The Rise of Cord-Cutting (2025 Projections)</h3>
+                    <p class="text-sm text-gray-600 mb-4">Non-pay TV households are projected to significantly outnumber pay TV households, driven by cost and preference for streaming.</p>
+                    <div class="chart-container h-60">
+                        <canvas id="cordCuttingChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: Projections based on report data (Sec 1.1)</p>
+                </div>
+                
+                <div class="stat-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">AVOD & FAST Channel Revenue Growth</h3>
+                    <p class="text-sm text-gray-600 mb-4">Advertising-based Video on Demand (AVOD) and Free Ad-Supported Streaming TV (FAST) channels are experiencing rapid revenue growth. Chart shows selected projection points.</p>
+                    <div class="chart-container h-60">
+                        <canvas id="avodFastGrowthChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: Report data (Sec 1.2)</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">YouTube: The Video Giant</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p class="kpi-value">2.7B+</p>
+                            <p class="kpi-label">Global Monthly Active Users (May 2025)</p>
+                        </div>
+                        <div>
+                            <p class="kpi-value">253M</p>
+                            <p class="kpi-label">US Users</p>
+                        </div>
+                        <div>
+                            <p class="kpi-value">46 min</p>
+                            <p class="kpi-label">Avg. Daily Time (US Adults)</p>
+                        </div>
+                        <div>
+                            <p class="kpi-value">32%</p>
+                            <p class="kpi-label">US Adults Get News on YouTube</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4 text-center">Source: Report data (Sec 1.3)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section2" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold section-title">Section 2: Political Ad Spending & Allocation Trends</h2>
+            <p class="mb-6 text-md">Political advertising expenditure is reaching record highs, with a significant and accelerating pivot towards digital channels. Understanding these financial flows is crucial for strategic campaign planning.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="stat-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">Political Ad Spend Growth (2020 vs 2024)</h3>
+                    <p class="text-sm text-gray-600 mb-4">The 2024 election cycle saw a substantial increase in total political ad spending compared to 2020.</p>
+                    <div class="chart-container h-72">
+                        <canvas id="totalAdSpendGrowthChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: eMarketer, Report data (Sec 2.1)</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">Digital's Share of Political Ad Spend</h3>
+                    <p class="text-sm text-gray-600 mb-4">Digital channels captured a dramatically larger portion of total political ad spending in 2024 compared to 2020, highlighting a significant shift in allocation.</p>
+                    <div class="chart-container h-72">
+                        <canvas id="digitalAdSpendShareChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: eMarketer, Report data (Sec 2.1)</p>
+                </div>
+
+                <div class="stat-card md:col-span-2">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">The Surge of CTV & Programmatic</h3>
+                     <p class="text-sm text-gray-600 mb-4">Connected TV (CTV) ad spend is booming, with programmatic buying becoming the dominant method for political campaigns. Video accounts for the lion's share of this investment.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center items-center">
+                        <div class="sm:col-span-1">
+                            <p class="text-3xl font-bold text-[#118AB2]">50%</p>
+                            <p class="text-sm text-gray-700">CTV's share of programmatic device ad spend (2024)</p>
+                        </div>
+                        <div class="sm:col-span-1">
+                             <p class="text-3xl font-bold text-[#118AB2]">76%</p>
+                            <p class="text-sm text-gray-700">Video's share of political digital ad investment (2024)</p>
+                        </div>
+                        <div class="sm:col-span-1">
+                            <p class="text-3xl font-bold text-[#118AB2]">36%</p>
+                            <p class="text-sm text-gray-700">New CTV investment in 2025 projected from Linear TV budgets</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4 text-center">Source: Report data (Sec 2.3)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section3" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold section-title">Section 3: Audience Deep Dive</h2>
+            <p class="mb-6 text-md">Effectively reaching voters requires a granular understanding of audience demographics and media consumption habits across different platforms. Linear TV, streaming services, YouTube, and various social media sites all attract distinct user bases.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="stat-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">Linear TV vs. Streaming: Audience Age</h3>
+                    <p class="text-sm text-gray-600 mb-4">Linear TV viewership skews older, while streaming platforms attract younger audiences. Gen Z overwhelmingly prefers streaming.</p>
+                    <div class="text-center my-4">
+                        <p><span class="text-2xl font-bold text-[#FF6B6B]">5h 46m</span><br/><span class="text-xs">Avg. Daily Linear TV (Baby Boomers)</span></p>
+                        <p class="mt-2"><span class="text-2xl font-bold text-[#06D6A0]">84%</span><br/><span class="text-xs">Gen Z Citing Streaming as First Choice</span></p>
+                        <p class="mt-2"><span class="text-2xl font-bold text-[#118AB2]">45.3 yrs</span><br/><span class="text-xs">Median Age of a Streamer</span></p>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: Report data (Sec 3.1)</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">YouTube News Consumers</h3>
+                    <p class="text-sm text-gray-600 mb-4">A significant portion of US adults get news from YouTube, with a notable gender skew among these consumers.</p>
+                    <div class="chart-container h-60">
+                        <canvas id="youtubeNewsGenderChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: Pew Research, Report data (Sec 1.3, 3.3)</p>
+                </div>
+
+                <div class="stat-card lg:col-span-3">
+                    <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">Social Media Platforms: Regular News Sources (US Adults)</h3>
+                    <p class="text-sm text-gray-600 mb-4">Different social media platforms attract varying percentages of US adults for regular news consumption, each with unique demographic and political leanings.</p>
+                    <div class="chart-container h-80 md:h-96">
+                        <canvas id="socialNewsConsumptionChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Source: Pew Research, Report data (Sec 1.4, Table 3.1)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section4" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold section-title">Section 4: Platform Policies on Political Ads</h2>
+            <p class="mb-6 text-md">Navigating the complex and varied advertising policies of media platforms is critical. Rules for political content, targeting, and transparency differ significantly across linear TV, streaming services, YouTube, social media, and search engines.</p>
+            <div class="stat-card overflow-x-auto">
+                <h3 class="text-xl font-semibold mb-3 text-[#073B4C]">Political Ad Policy Quick View (2024-2025)</h3>
+                <table class="min-w-full divide-y divide-gray-300">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Platform</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Allows Paid Political Ads?</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Key Policy Notes</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Transparency</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                        <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">Linear TV</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Yes</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">"Stand By Your Ad", "Paid for by" disclaimers</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">FEC Filings, Station Files</td>
+                        </tr>
+                        <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">Netflix</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">No</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">Prohibits political ads on ad tier</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">N/A</td>
+                        </tr>
+                        <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">Hulu</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Yes (Restricted)</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">Targeting limits, no self-serve for political</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">No dedicated ad library</td>
+                        </tr>
+                         <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">Disney+</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">No</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">No political or alcohol ads</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">N/A</td>
+                        </tr>
+                        <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">YouTube (Google)</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Yes</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">Prohibits voter suppression, manipulated content; AI disclosure</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Political Ads Transparency Report</td>
+                        </tr>
+                        <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">Meta (Facebook/Insta)</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Yes</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">Authorization, "Community Notes" system</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Meta Ad Library</td>
+                        </tr>
+                        <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">X (Twitter)</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Yes</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">Reversed ban; prohibits false election info</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Less defined</td>
+                        </tr>
+                        <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">TikTok</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">No (Paid Ads)</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">Strict prohibition on paid political ads</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">N/A for political</td>
+                        </tr>
+                        <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">Google Search</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Yes</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">Verification, broad targeting, disclosures</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Political Ads Transparency Report</td>
+                        </tr>
+                         <tr>
+                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">Bing Search</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">No</td>
+                            <td class="whitespace-normal px-3 py-4 text-sm text-gray-500 text-wrap">Prohibits political advertising</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-xs text-gray-500 mt-2 text-center">Source: Synthesized from Report data (Sec 4, Table 4.1)</p>
+            </div>
+        </section>
+
+        <section id="section5" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold section-title">Section 5: Key Takeaways & Future Outlook</h2>
+            <p class="mb-6 text-md">The political advertising landscape is dynamic. Digital dominance, sophisticated targeting, and the challenge of misinformation will shape future campaigns. Agility and a deep understanding of voter media habits are paramount.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="stat-card bg-[#118AB2] text-white">
+                    <h3 class="text-xl font-semibold mb-2">Digital-First is Key</h3>
+                    <p class="text-sm">Budgets and strategies must prioritize CTV, YouTube, and targeted social media. Linear TV plays a supplementary, more strategic role for specific demographics.</p>
+                </div>
+                <div class="stat-card bg-[#06D6A0] text-white">
+                    <h3 class="text-xl font-semibold mb-2">Data & Programmatic Prowess</h3>
+                    <p class="text-sm">Expertise in programmatic CTV, data analytics, and integrating first-party data is crucial for efficient targeting and spend optimization.</p>
+                </div>
+                <div class="stat-card bg-[#FFD166] text-[#073B4C]">
+                    <h3 class="text-xl font-semibold mb-2">Platform-Specific Content</h3>
+                    <p class="text-sm">Tailor messages, creative formats (e.g., vertical video), and engagement strategies to each platform's unique audience and evolving policies for maximum impact.</p>
+                </div>
+                <div class="stat-card bg-[#FF6B6B] text-white">
+                    <h3 class="text-xl font-semibold mb-2">AI & Misinformation Challenge</h3>
+                    <p class="text-sm">Vigilance against AI-driven misinformation, commitment to authentic messaging, and adherence to disclosure policies are vital for trust and campaign integrity.</p>
+                </div>
+                <div class="stat-card bg-[#073B4C] text-white lg:col-span-2">
+                    <h3 class="text-xl font-semibold mb-2">Advanced Measurement Needed</h3>
+                    <p class="text-sm">Move beyond basic metrics to measure persuasion, fundraising, and GOTV impact across the fragmented media journey, utilizing cross-platform attribution where possible.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#073B4C] text-white text-center p-6 mt-12">
+        <p class="text-sm">&copy; 2025 Political Ad Insights. Data synthesized from "Navigating the Evolving Media Landscape" Report.</p>
+        <p class="text-xs mt-1">This infographic is for illustrative purposes based on the provided research material.</p>
+    </footer>
+
+    <script>
+        const primaryColor = '#FF6B6B'; // Coral Red
+        const secondaryColor = '#FFD166'; // Sunny Yellow
+        const tertiaryColor = '#06D6A0'; // Tealish Green
+        const quaternaryColor = '#118AB2'; // Cerulean Blue
+        const accentDarkColor = '#073B4C'; // Dark Slate Blue
+        const textColor = '#2D3748'; // Also used for chart tick/label colors
+
+        function processLabels(labels) {
+            return labels.map(label => {
+                if (typeof label === 'string' && label.length > 16) {
+                    const words = label.split(' ');
+                    const lines = [];
+                    let currentLine = '';
+                    for (const word of words) {
+                        if ((currentLine + word).length > 16 && currentLine.length > 0) {
+                            lines.push(currentLine.trim());
+                            currentLine = word + ' ';
+                        } else {
+                            currentLine += word + ' ';
+                        }
+                    }
+                    lines.push(currentLine.trim());
+                    return lines;
+                }
+                return label;
+            });
+        }
+        
+        const commonChartOptionsBase = { 
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: textColor // Using the defined textColor variable
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Chart 1: Total TV Time Share
+        const totalTvTimeCtx = document.getElementById('totalTvTimeChart').getContext('2d');
+        new Chart(totalTvTimeCtx, {
+            type: 'bar',
+            data: {
+                labels: processLabels(['Broadcast & Cable', 'Streaming']),
+                datasets: [{
+                    label: '% of Total TV Time (Mar 2025)',
+                    data: [44.5, 44.3],
+                    backgroundColor: [primaryColor, tertiaryColor],
+                    borderColor: [primaryColor, tertiaryColor],
+                    borderWidth: 1
+                }]
+            },
+            options: { 
+                ...commonChartOptionsBase, 
+                indexAxis: 'y',
+                scales: {
+                    x: { 
+                        beginAtZero: true,
+                        suggestedMax: 50,
+                        ticks: { color: textColor, stepSize: 10 },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    y: { 
+                        ticks: { color: textColor },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Ad-Supported Viewing Time Share
+        const adSupportedTimeCtx = document.getElementById('adSupportedTimeChart').getContext('2d');
+        new Chart(adSupportedTimeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: processLabels(['Linear TV', 'Streaming (Ad-Supported Tiers)']),
+                datasets: [{
+                    label: '% of Ad-Supported Viewing Time',
+                    data: [57.6, 42.4], 
+                    backgroundColor: [quaternaryColor, secondaryColor],
+                    hoverOffset: 4
+                }]
+            },
+            options: commonChartOptionsBase
+        });
+
+        // Chart 3: Cord-Cutting Trends
+        const cordCuttingCtx = document.getElementById('cordCuttingChart').getContext('2d');
+        new Chart(cordCuttingCtx, {
+            type: 'bar',
+            data: {
+                labels: processLabels(['Pay TV Households', 'Non-Pay TV Households']),
+                datasets: [{
+                    label: 'Projected Households in 2025 (Millions)',
+                    data: [56.8, 77.2],
+                    backgroundColor: [primaryColor, tertiaryColor],
+                }]
+            },
+            options: {
+                ...commonChartOptionsBase,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 80,
+                        title: { display: true, text: 'Households (Millions)', color: textColor },
+                        ticks: { color: textColor },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        ticks: { color: textColor },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                }
+            }
+        });
+        
+        // Chart 4: AVOD/FAST Revenue Growth
+        const avodFastGrowthCtx = document.getElementById('avodFastGrowthChart').getContext('2d');
+        new Chart(avodFastGrowthCtx, {
+            type: 'line',
+            data: {
+                labels: ['2023', '2024 (US AVOD Proj.)', '2029 (Global FAST Proj.)', '2033 (US AVOD Proj.)'],
+                datasets: [{
+                    label: 'AVOD Revenue (US)',
+                    data: [null, 12.01, null, 21.71],
+                    borderColor: primaryColor,
+                    backgroundColor: 'rgba(255, 107, 107, 0.2)', // Coral Red with alpha
+                    fill: true,
+                    tension: 0.1,
+                    spanGaps: true 
+                }, {
+                    label: 'FAST Revenue (Global)',
+                    data: [8, null, 17, null],
+                    borderColor: tertiaryColor,
+                    backgroundColor: 'rgba(6, 214, 160, 0.2)', // Tealish Green with alpha
+                    fill: true,
+                    tension: 0.1,
+                    spanGaps: true
+                }]
+            },
+            options: {
+                ...commonChartOptionsBase,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 25,
+                        title: { display: true, text: 'Revenue (Billions USD)', color: textColor },
+                        ticks: { color: textColor },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        ticks: { color: textColor },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                }
+            }
+        });
+
+        // Chart 5: Total Ad Spend Growth
+        const totalAdSpendGrowthCtx = document.getElementById('totalAdSpendGrowthChart').getContext('2d');
+        new Chart(totalAdSpendGrowthCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2020', '2024'],
+                datasets: [{
+                    label: 'Total Political Ad Spend (Billions USD)',
+                    data: [(12/1.29).toFixed(2), 12], 
+                    backgroundColor: [secondaryColor, quaternaryColor],
+                }]
+            },
+            options: {
+                ...commonChartOptionsBase,
+                 scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 15,
+                        title: { display: true, text: 'Spend (Billions USD)', color: textColor },
+                        ticks: { color: textColor },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        ticks: { color: textColor },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                }
+            }
+        });
+        
+        // Chart 6: Digital Ad Spend Share (Grouped Bar Chart)
+        const digitalAdSpendShareCtx = document.getElementById('digitalAdSpendShareChart').getContext('2d');
+        new Chart(digitalAdSpendShareCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2020', '2024'],
+                datasets: [
+                    {
+                        label: 'Digital Share (%)',
+                        data: [14.1, 28.1],
+                        backgroundColor: primaryColor,
+                        borderColor: primaryColor,
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Other Share (%)',
+                        data: [85.9, 71.9],
+                        backgroundColor: tertiaryColor,
+                        borderColor: tertiaryColor,
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                ...commonChartOptionsBase,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 100,
+                        title: { display: true, text: 'Share of Ad Spend (%)', color: textColor },
+                        ticks: { 
+                            color: textColor,
+                            callback: function(value) { return value + '%' } 
+                        },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        ticks: { color: textColor },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                },
+                plugins: {
+                    ...commonChartOptionsBase.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + '%';
+                                }
+                                return label;
+                            },
+                            title: function(tooltipItems) { 
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Chart 7: YouTube News Consumer Gender Skew
+        const youtubeNewsGenderCtx = document.getElementById('youtubeNewsGenderChart').getContext('2d');
+        new Chart(youtubeNewsGenderCtx, {
+            type: 'pie',
+            data: {
+                labels: processLabels(['Male News Consumers', 'Female News Consumers']),
+                datasets: [{
+                    label: 'Gender Skew of YouTube News Consumers (US)',
+                    data: [57, 42],
+                    backgroundColor: [quaternaryColor, primaryColor],
+                    hoverOffset: 4
+                }]
+            },
+            options: commonChartOptionsBase
+        });
+
+        // Chart 8: Social Media News Consumption by Platform
+        const socialNewsConsumptionCtx = document.getElementById('socialNewsConsumptionChart').getContext('2d');
+        new Chart(socialNewsConsumptionCtx, {
+            type: 'bar',
+            data: {
+                labels: processLabels(['Facebook', 'YouTube', 'Instagram', 'TikTok', 'X (Twitter)']),
+                datasets: [{
+                    label: '% US Adults Regularly Get News',
+                    data: [33, 32, 20, 17, 12],
+                    backgroundColor: [primaryColor, secondaryColor, tertiaryColor, quaternaryColor, accentDarkColor],
+                }]
+            },
+            options: {
+                ...commonChartOptionsBase,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 40,
+                        title: { display: true, text: '% US Adults', color: textColor },
+                        ticks: { 
+                            color: textColor,
+                            callback: function(value) { return value + '%' } 
+                        },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        ticks: { color: textColor },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                }
+            }
+        });
+
+    </script>
+
+    <!-- 
+        Chosen Color Palette: Energetic & Playful
+        Primary: #FF6B6B (Coral Red)
+        Secondary: #FFD166 (Sunny Yellow)
+        Tertiary: #06D6A0 (Tealish Green)
+        Quaternary: #118AB2 (Cerulean Blue)
+        Accent/Dark: #073B4C (Dark Slate Blue)
+        Background: #F0F4F8 (Light bluish gray)
+        Text: #2D3748 (Dark Gray)
+    -->
+
+    <!-- 
+        Infographic Narrative & Structure Plan:
+        1. Introduction/Hook: Title and brief overview of the shifting media landscape.
+        2. Section 1: The Shifting Media Consumption Paradigm
+           - Overview of Linear TV vs. Streaming (Time Spent, Ad-Supported Viewership)
+           - Cord-Cutting Trends
+           - Rise of AVOD/FAST Channels
+           - YouTube's Dominance (Users, Time Spent, News Source)
+           - Social Media News Consumption Overview
+        3. Section 2: Political Ad Spending & Allocation Trends
+           - Overall Political Ad Spend Growth (2024 vs 2020)
+           - Digital vs. Traditional Ad Spend Share
+           - CTV Programmatic Growth
+           - YouTube & Meta Political Ad Spend Highlights
+        4. Section 3: Audience Deep Dive
+           - Linear TV vs. Streaming Audience Demographics (Age)
+           - YouTube News Consumer Profile (Gender, Political Leanings of Influencers)
+           - Social Media News Consumer Demographics (Platform Specific: Age, Gender, Political Leaning)
+        5. Section 4: Platform Policies Snapshot
+           - Comparative table/graphic of political ad allowance (Netflix, Hulu, YouTube, Meta, X, TikTok, Google Search)
+        6. Section 5: Key Takeaways & Future Outlook
+           - Summary of key trends (Digital Growth, AI/Misinformation, Measurement)
+           - Brief note on future of political advertising.
+    -->
+
+    <!-- 
+        Visualization Choices & Justifications (Confirming NO SVG, NO MERMAID JS):
+        - Linear TV vs. Streaming Time: Bar Chart (Compare) - Chart.js Canvas.
+        - Ad-Supported Viewership Share (Linear vs. Streaming): Donut Chart (Inform/Compare) - Chart.js Canvas.
+        - Cord-Cutting (Pay TV vs. Non-Pay TV Households): Bar Chart (Change/Compare) - Chart.js Canvas.
+        - AVOD/FAST Revenue Growth: Line Chart (Change) - Chart.js Canvas.
+        - YouTube User Stats (MAU, Daily Time): Big Numbers (Inform) - HTML/CSS.
+        - YouTube as News Source (%): Pie Chart (Inform) - Chart.js Canvas (previously was Donut, Pie is fine for 2 segments).
+        - Social Media News Consumption (% by Platform): Bar Chart (Compare) - Chart.js Canvas.
+        - Political Ad Spend Growth (Total & Digital): Bar Chart (Change/Compare) - Chart.js Canvas.
+        - Digital Ad Spend Share (2020 vs 2024): Grouped Bar Chart (Compare) - Chart.js Canvas (Changed from Donut for clarity).
+        - CTV Programmatic Spend Share: (This was planned but not implemented as a chart, data is in KPI cards)
+        - Linear TV vs. Streaming Audience Age Skew: (Data presented as KPIs, not a chart)
+        - YouTube News Consumer Gender Skew: Pie Chart (Inform) - Chart.js Canvas.
+        - Social Media News Consumer Political Leaning (Selected Platforms): (Data is in Table 3.1 of report, not directly charted here beyond general news consumption)
+        - Platform Policies Overview: HTML Table (Organize) - Tailwind Styled HTML.
+        - Process Flow (e.g., Ad Spend Reallocation to CTV): (Not implemented as a diagram in this version)
+
+        Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in this output. All charts are Chart.js (Canvas). Diagrams are HTML/CSS.
+    -->
+</body>
+</html>
