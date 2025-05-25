@@ -1,0 +1,47 @@
+[
+    {
+      "id": "political-youtube-targeting",
+      "title": "Maximizing Top-of-Funnel Impact: YouTube Advertising Strategies for Political Campaigns",
+      "contentPath": "data/report-content/YouTube Targeting for Political Awareness_.md",
+      "tags": ["YouTube", "Political Campaigns", "Advertising", "Top-of-Funnel", "Targeting", "Brand Safety", "ToFu"],
+      "description": "YouTube stands as a dominant force in the digital media landscape, offering political campaigns unparalleled reach to engage voters across diverse demographics. This report provides an in-depth analysis of YouTube targeting techniques and best practices tailored for political agencies focused on maximizing ToFu impact, explicitly excluding conversion-driven and list-matching tactics often restricted or irrelevant for these goals.",
+      "sourceAITool": "Gemini Deep Research",
+      "createdAt": "2025-05-25T10:00:00Z"
+    },
+    {
+      "id": "hispanic-youtube-targeting",
+      "title": "Identifying High-Impact YouTube Channels for Reaching US Hispanic Audiences",
+      "contentPath": "data/report-content/Hispanic YouTube Targeting Campaign_.md",
+      "tags": ["YouTube", "Hispanic Audience", "Latinx", "Targeting", "Advertising", "Cultural Relevance", "Media Planning"],
+      "description": "The US Hispanic population represents a large, dynamic, and digitally engaged demographic, with YouTube serving as a primary platform for entertainment, information, and cultural connection. This report analyzes the YouTube landscape to identify channels and content categories popular among US Hispanic audiences, providing actionable intelligence for advertisers seeking to reach this valuable market segment.",
+      "sourceAITool": "Gemini Deep Research",
+      "createdAt": "2025-05-24T11:00:00Z"
+    },
+    {
+      "id": "aapi-youtube-targeting",
+      "title": "Identifying Promising YouTube Channels and Content for Reaching Asian American and Pacific Islander (AAPI) Audiences",
+      "contentPath": "data/report-content/AAPI Targeted YouTube Campaigns_.md",
+      "tags": ["YouTube", "AAPI Audience", "Targeting", "Advertising", "Cultural Relevance", "Community", "Media Strategy"],
+      "description": "The Asian American and Pacific Islander (AAPI) community represents a diverse, rapidly growing, and increasingly influential demographic within the United States. This report provides an analysis of YouTube channels and content popular among AAPI audiences in the US, offering guidance for developing targeted and culturally relevant advertising strategies.",
+      "sourceAITool": "Gemini Deep Research",
+      "createdAt": "2025-05-23T12:00:00Z"
+    },
+    {
+      "id": "media-landscape-2024-2025",
+      "title": "Navigating the Evolving Media Landscape: A Deep Dive for Political Advertisers in 2024-2025",
+      "contentPath": "data/report-content/Navigating the Evolving Media Landscape_ Gemini Report.md",
+      "tags": ["Media Landscape", "Political Advertising", "Digital Media", "Streaming", "CTV", "YouTube", "Social Media", "Ad Spend"],
+      "description": "The American media landscape is undergoing a profound transformation, characterized by a significant migration of audiences from traditional platforms to a diverse array of digital channels. This shift has critical implications for political advertisers seeking to effectively reach and engage voters in 2024 and 2025.",
+      "sourceAITool": "Gemini Deep Research",
+      "createdAt": "2025-05-22T13:00:00Z"
+    },
+    {
+      "id": "afam-youtube-targeting",
+      "title": "Identifying Promising YouTube Channels for Reaching African American Audiences",
+      "contentPath": "data/report-content/YouTube Channels for AfAm Ads - Gemini Deep Research.md",
+      "tags": ["YouTube", "African American Audience", "Black Community", "Targeting", "Advertising", "Cultural Relevance", "Media Channels"],
+      "description": "This report identifies and analyzes YouTube channels demonstrating significant reach and resonance within the African American community, aiming to inform strategic channel selection for targeted advertising programs. The analysis reveals a diverse and vibrant ecosystem of channels popular among African American audiences, extending far beyond traditionally assumed categories.",
+      "sourceAITool": "Gemini Deep Research",
+      "createdAt": "2025-05-21T14:00:00Z"
+    }
+  ]
