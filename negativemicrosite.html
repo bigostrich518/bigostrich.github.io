@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Truth About [Opponent's Name]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Impact&display=swap" rel="stylesheet"> <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Base text color is now set by Tailwind on body */
+        }
+        .hero-overlay {
+            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay for better text contrast */
+        }
+        .accent-color { /* Yellow accent for text */
+            color: #FACC15; /* Tailwind: text-yellow-400 */
+        }
+        .section-separator {
+            border-bottom-width: 1px;
+            /* Border color will be applied via Tailwind classes */
+        }
+        .newspaper-clipping {
+            background-color: #E5E7EB; /* Light gray for paper effect */
+            color: #1F2937; /* Dark gray text */
+            border: 1px solid #9CA3AF; /* Gray border */
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+            transform: rotate(-2deg); /* Slight rotation for authenticity */
+        }
+        .newspaper-clipping-alt {
+            background-color: #FDF6E3; /* Off-white, aged paper */
+            color: #333333;
+            border: 1px solid #D1C7B7;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+            transform: rotate(1.5deg);
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000; /* Fallback background for video area */
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .header-fixed { /* Sticky header styling */
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            /* Background color and blur applied via Tailwind */
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-900 text-gray-100">
+
+    <header class="header-fixed py-4 shadow-lg bg-red-900/95 backdrop-blur-md border-b border-red-700">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-2xl sm:text-3xl font-black accent-color tracking-tight">
+                [CAMPAIGN NAME/SLOGAN]
+            </h1>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="relative bg-cover bg-center py-20 sm:py-32 lg:py-40" style="background-image: url('https://placehold.co/1200x800/333333/CCCCCC?text=Opponent+Image+Here&font=inter');">
+            <div class="absolute inset-0 hero-overlay"></div>
+            <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white drop-shadow-md">
+                    The <span class="accent-color">Real Story</span> They Don't Want You To Know.
+                </h2>
+                <p class="mt-6 text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto drop-shadow-sm">
+                    [Opponent's Name] says one thing, but their record shows another. It's time for the truth.
+                </p>
+                <div class="mt-10">
+                    <a href="#learn-more" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-8 rounded-lg text-lg shadow-md hover:shadow-xl transform hover:scale-105 transition-colors duration-300">
+                        See The Facts
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="learn-more" class="py-16 sm:py-24 bg-red-800 section-separator border-gray-700">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl sm:text-4xl font-black text-white">Watch The <span class="accent-color">Evidence</span></h3>
+                    <p class="mt-3 text-lg text-red-100 max-w-xl mx-auto">
+                        Don't just take our word for it. See [Opponent's Name]'s actions for yourself.
+                    </p>
+                </div>
+                <div class="max-w-3xl mx-auto rounded-lg overflow-hidden shadow-2xl">
+                    <div class="video-container">
+                        <iframe
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                            title="Placeholder Video"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                 <p class="mt-8 text-center text-sm text-red-200">
+                    This footage reveals [brief description of video content and its negative implication].
+                </p>
+            </div>
+        </section>
+
+        <section class="py-16 sm:py-24 section-separator border-gray-700"> <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl sm:text-4xl font-black text-white">What The <span class="accent-color">Press Says</span></h3>
+                    <p class="mt-3 text-lg text-gray-300 max-w-xl mx-auto">
+                        Independent sources have raised serious concerns about [Opponent's Name]'s conduct.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
+                    <div class="p-6 rounded-lg newspaper-clipping">
+                        <h4 class="text-xl font-bold mb-2">"[Shocking Headline About Opponent]"</h4>
+                        <p class="text-sm mb-3 text-gray-700">
+                            A recent investigation by the <span class="font-semibold italic">Local Times Gazette</span> uncovered troubling details about [Opponent's Name]'s past dealings... <a href="#" class="text-blue-600 hover:underline">Read more</a>
+                        </p>
+                        <p class="text-xs text-gray-500 text-right">- Local Times Gazette, Oct 26, 2023</p>
+                    </div>
+
+                    <div class="p-6 rounded-lg newspaper-clipping-alt">
+                        <h4 class="text-xl font-bold mb-2">"[Another Damaging Quote or Finding]"</h4>
+                        <p class="text-sm mb-3 text-gray-700">
+                            Financial records indicate a pattern of questionable decisions under [Opponent's Name]'s leadership, as reported by <span class="font-semibold italic">The Daily Chronicle</span>... <a href="#" class="text-blue-600 hover:underline">Full Report</a>
+                        </p>
+                        <p class="text-xs text-gray-500 text-right">- The Daily Chronicle, Nov 05, 2023</p>
+                    </div>
+
+                    <div class="p-6 rounded-lg bg-red-700 border border-red-600 text-white">
+                         <img src="https://placehold.co/300x200/4A0404/EAEAEA?text=REDACTED+REPORT&font=impact" alt="Image of a redacted report or sensitive document" class="w-full h-auto rounded mb-4" onerror="this.src='https://placehold.co/300x200/555555/EEEEEE?text=Image+Error&font=inter'; this.alt='Error loading image'">
+                        <h4 class="text-xl font-bold mb-2">"A Betrayal of Trust"</h4>
+                        <p class="text-sm mb-3 text-red-100">
+                            Community leaders express their disappointment over [Opponent's Name]'s broken promises.
+                        </p>
+                        <p class="text-xs text-red-200 text-right">- Community Voice Weekly, Nov 12, 2023</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 sm:py-24 bg-red-800 section-separator border-gray-700" id="issues">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl sm:text-4xl font-black text-white">Their <span class="accent-color">Failed</span> Record</h3>
+                    <p class="mt-3 text-lg text-red-100 max-w-xl mx-auto">
+                        A closer look at [Opponent's Name]'s voting history and policy decisions.
+                    </p>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-8">
+                    <div class="bg-red-700 p-6 rounded-lg shadow-md text-red-50">
+                        <h4 class="text-xl font-bold text-white mb-2">On [Key Issue 1 e.g., Healthcare]:</h4>
+                        <p class="text-red-100">
+                            [Opponent's Name] voted against [Specific Bill/Measure], which would have [Positive Outcome]. Instead, they supported policies that [Negative Consequence].
+                        </p>
+                        <a href="#" class="text-sm accent-color hover:text-yellow-300 mt-2 inline-block">Source & Details →</a>
+                    </div>
+                    <div class="bg-red-700 p-6 rounded-lg shadow-md text-red-50">
+                        <h4 class="text-xl font-bold text-white mb-2">On [Key Issue 2 e.g., Economy]:</h4>
+                        <p class="text-red-100">
+                            Despite promises of economic growth, [Opponent's Name]'s tenure saw [Negative Economic Indicator, e.g., job losses in key sector / increased taxes for families].
+                        </p>
+                        <a href="#" class="text-sm accent-color hover:text-yellow-300 mt-2 inline-block">Source & Details →</a>
+                    </div>
+                    <div class="bg-red-700 p-6 rounded-lg shadow-md text-red-50">
+                        <h4 class="text-xl font-bold text-white mb-2">On [Key Issue 3 e.g., Ethics]:</h4>
+                        <p class="text-red-100">
+                            Multiple reports highlight [Opponent's Name]'s questionable ethical conduct, including [Specific Example].
+                        </p>
+                        <a href="#" class="text-sm accent-color hover:text-yellow-300 mt-2 inline-block">Source & Details →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 sm:py-24 bg-red-700 text-center section-separator border-red-900"> <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h3 class="text-3xl sm:text-4xl font-black text-white">It's Time For A <span class="accent-color">Change</span>.</h3>
+                <p class="mt-4 text-lg text-red-100 max-w-xl mx-auto">
+                    Don't let [Opponent's Name] mislead our community any longer.
+                </p>
+                <div class="mt-10">
+                    <a href="[YourCampaignSiteLink]" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-4 px-10 rounded-lg text-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-colors duration-300">
+                        Join Us / Learn More
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-8 bg-black text-center border-t border-gray-700">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-sm text-gray-400">
+                Paid for by [Name of Committee or Organization]
+            </p>
+            <p class="text-xs text-gray-500 mt-1">
+                [Address of Committee, if required by law] | Not authorized by any candidate or candidate's committee.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
