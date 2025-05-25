@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Audio Hub - Sleek Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* slate-900 */
+            color: #e2e8f0; /* slate-200 */
+        }
+        .audio-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .audio-list::-webkit-scrollbar-track {
+            background: #1e293b; /* slate-800 */
+            border-radius: 10px;
+        }
+        .audio-list::-webkit-scrollbar-thumb {
+            background: #475569; /* slate-600 */
+            border-radius: 10px;
+        }
+        .audio-list::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* slate-500 */
+        }
+        audio {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 0.375rem; /* rounded-md */
+            filter: invert(90%) hue-rotate(180deg) contrast(0.8) brightness(1.1); /* Style default controls for dark theme */
+        }
+        .active-audio-item {
+            background-color: #1e3a8a; /* blue-800, adjust as needed */
+            color: #eff6ff; /* blue-50 */
+        }
+        .active-audio-item .play-icon, .active-audio-item .pause-icon {
+            color: #93c5fd; /* blue-300 */
+        }
+        .play-icon, .pause-icon {
+            transition: color 0.2s ease-in-out;
+        }
+        .list-item-hover:hover {
+            background-color: #1e293b; /* slate-800 */
+        }
+        .list-item-hover:hover .play-icon {
+            color: #60a5fa; /* blue-400 */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 selection:bg-sky-500 selection:text-white">
+
+    <div class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-2xl border border-slate-700">
+        <header class="mb-8 text-center">
+            <div class="inline-flex items-center justify-center bg-sky-600 p-3 rounded-full mb-4 shadow-lg">
+                 <i class="fas fa-robot fa-2x text-white"></i>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-100">AI Audio Hub</h1>
+            <p class="text-sm text-slate-400 mt-2">Curated AI-generated audio content.</p>
+        </header>
+
+        <section class="mb-8 p-4 bg-slate-700 rounded-lg shadow-lg">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-headphones-alt fa-lg text-sky-400 mr-3"></i>
+                <h2 class="text-xl font-semibold text-slate-200">Now Playing</h2>
+            </div>
+            <div id="nowPlaying" class="text-slate-300 italic mb-3 truncate text-sm">No audio selected. Select an item from the library.</div>
+            <audio id="audioPlayer" controls>
+                Your browser does not support the audio element.
+            </audio>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-4">
+                <i class="fas fa-list-ul fa-lg text-sky-400 mr-3"></i>
+                <h2 class="text-xl font-semibold text-slate-200">Audio Library</h2>
+            </div>
+            <div id="audioList" class="audio-list max-h-96 overflow-y-auto space-y-2 pr-2">
+                <p id="noFilesMessage" class="text-slate-500 text-center py-4">Audio library is empty or not loaded.</p>
+            </div>
+        </section>
+
+        <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+            <div class="bg-slate-700 p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 border border-slate-600">
+                <h3 id="messageModalTitle" class="text-xl font-semibold mb-3 text-sky-400">Message</h3>
+                <p id="messageModalText" class="text-slate-300 mb-4"></p>
+                <button id="messageModalClose" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-700">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration: Define your audio files here ---
+        // IMPORTANT: Place your audio files in an 'audio' folder relative to this HTML file.
+        // For example, if this HTML is in the root, create an 'audio' folder in the root.
+        // Then, 'audio/podcast_episode_1.mp3' would be a valid path.
+        const audioFiles = [
+            {
+                filePath: "audio/Analysis of the 2024 Presidential Election.wav",
+                title: "Analysis of the 2024 Presidential Election",
+                artist: "Political Analysis",
+                duration: 125 // Estimated duration in seconds
+            },
+            {
+                filePath: "audio/Navigating Political Ads_ SSPs and Supply Path Optimization.wav",
+                title: "Navigating Political Ads: SSPs and Supply Path Optimization",
+                artist: "Political Advertising",
+                duration: 235 // Estimated duration in seconds
+            },
+            {
+                filePath: "audio/Political Advertising in the Shifting Media Landscape.wav",
+                title: "Political Advertising in the Shifting Media Landscape",
+                artist: "Political Analysis",
+                duration: 135 // Estimated duration in seconds
+            },
+            {
+                filePath: "audio/State PFAS Regulatory Policies Overview.wav",
+                title: "State PFAS Regulatory Policies Overview",
+                artist: "Environmental Policy",
+                duration: 170 // Estimated duration in seconds
+            },
+            {
+                id: 'short_clip',
+                title: "AI Voice Demo",
+                artist: "Synthesized Voices Co.",
+                duration: "0:45",
+                filePath: "audio/sample3.mp3" // Replace with actual path
+            },
+            // Add more audio files here following the same structure
+            // {
+            //     id: 'unique_id_for_file',
+            //     title: "Your Audio Title",
+            //     artist: "Creator Name",
+            //     duration: "MM:SS",
+            //     filePath: "audio/your_file_name.mp3"
+            // }
+        ];
+        // --- End Configuration ---
+
+        // --- UI Elements ---
+        const audioListDiv = document.getElementById('audioList');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const nowPlayingDiv = document.getElementById('nowPlaying');
+        const noFilesMessage = document.getElementById('noFilesMessage');
+
+        const messageModal = document.getElementById('messageModal');
+        const messageModalTitle = document.getElementById('messageModalTitle');
+        const messageModalText = document.getElementById('messageModalText');
+        const messageModalClose = document.getElementById('messageModalClose');
+
+        let currentlyPlayingItem = null; // DOM element of the currently playing item
+        let currentlyPlayingAudioId = null; // ID of the currently playing audio
+
+        // --- Utility Functions for Modal (Optional) ---
+        function showMessage(title, text) {
+            messageModalTitle.textContent = title;
+            messageModalText.textContent = text;
+            messageModal.classList.remove('hidden');
+            messageModal.classList.add('flex');
+        }
+
+        if (messageModalClose) {
+            messageModalClose.addEventListener('click', () => {
+                messageModal.classList.add('hidden');
+                messageModal.classList.remove('flex');
+            });
+        }
+
+        // --- Audio Playback Logic ---
+        function playAudio(file) {
+            if (!file || !file.filePath) {
+                console.error("Invalid file object or missing filePath:", file);
+                showMessage("Playback Error", "Cannot play this audio file. Path is missing.");
+                return;
+            }
+
+            audioPlayer.src = file.filePath;
+            nowPlayingDiv.textContent = `${file.title} - ${file.artist || 'Unknown Artist'}`;
+            nowPlayingDiv.title = `${file.title} - ${file.artist || 'Unknown Artist'}`;
+
+            audioPlayer.play().then(() => {
+                updatePlayingUI(file.id, true);
+            }).catch(error => {
+                console.error("Error playing audio:", error);
+                showMessage("Playback Error", `Could not play ${file.title}: ${error.message}`);
+                updatePlayingUI(file.id, false);
+            });
+        }
+        
+        function updatePlayingUI(audioId, isPlaying) {
+            // Remove active state from previously playing item
+            if (currentlyPlayingItem) {
+                currentlyPlayingItem.classList.remove('active-audio-item', 'bg-sky-700', 'text-white');
+                currentlyPlayingItem.classList.add('list-item-hover');
+                const oldIcon = currentlyPlayingItem.querySelector('.play-pause-icon i');
+                if (oldIcon) {
+                    oldIcon.classList.remove('fa-pause-circle');
+                    oldIcon.classList.add('fa-play-circle');
+                    oldIcon.classList.remove('text-sky-300');
+                    oldIcon.classList.add('text-sky-500');
+                }
+            }
+
+            const listItem = document.getElementById(`audio-item-${audioId}`);
+            if (listItem) {
+                currentlyPlayingItem = listItem;
+                currentlyPlayingAudioId = audioId;
+
+                if (isPlaying) {
+                    listItem.classList.add('active-audio-item', 'bg-sky-700', 'text-white');
+                    listItem.classList.remove('list-item-hover');
+                    const icon = listItem.querySelector('.play-pause-icon i');
+                    if (icon) {
+                        icon.classList.remove('fa-play-circle');
+                        icon.classList.add('fa-pause-circle');
+                        icon.classList.remove('text-sky-500');
+                        icon.classList.add('text-sky-300');
+                    }
+                }
+            }
+        }
+
+
+        // --- UI Rendering ---
+        function renderAudioFiles() {
+            audioListDiv.innerHTML = ''; // Clear previous list
+
+            if (audioFiles.length === 0) {
+                noFilesMessage.classList.remove('hidden');
+                audioListDiv.appendChild(noFilesMessage);
+                return;
+            }
+            noFilesMessage.classList.add('hidden');
+
+            audioFiles.forEach(file => {
+                const fileDiv = document.createElement('div');
+                fileDiv.id = `audio-item-${file.id}`;
+                fileDiv.className = 'list-item-hover bg-slate-700/50 p-3 sm:p-4 rounded-lg shadow hover:shadow-md transition-all duration-200 flex items-center justify-between space-x-3 cursor-pointer border border-transparent hover:border-sky-500';
+                
+                fileDiv.innerHTML = `
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <span class="play-pause-icon text-sky-500 hover:text-sky-400 text-2xl">
+                            <i class="fas fa-play-circle"></i>
+                        </span>
+                        <div class="overflow-hidden">
+                            <p class="text-slate-100 font-medium truncate" title="${file.title}">${file.title}</p>
+                            <p class="text-slate-400 text-xs truncate" title="${file.artist || 'Unknown Artist'}">${file.artist || 'Unknown Artist'} ${file.duration ? `&bull; ${file.duration}` : ''}</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-headphones text-slate-500 text-lg opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                `;
+                // Add group class for hover effect on headphones icon (Tailwind doesn't directly support parent hover for child opacity)
+                // We'll use a simpler direct hover on the item for now.
+
+                fileDiv.addEventListener('click', () => {
+                    if (currentlyPlayingAudioId === file.id && !audioPlayer.paused) {
+                        audioPlayer.pause();
+                        // Icon change handled by 'pause' event listener on audioPlayer
+                    } else {
+                        playAudio(file);
+                    }
+                });
+
+                audioListDiv.appendChild(fileDiv);
+            });
+        }
+        
+        // Event listeners for the audio player to update UI
+        audioPlayer.onplay = () => {
+            if (currentlyPlayingAudioId) updatePlayingUI(currentlyPlayingAudioId, true);
+        };
+
+        audioPlayer.onpause = () => {
+            if (currentlyPlayingAudioId) updatePlayingUI(currentlyPlayingAudioId, false); // Visually show as paused
+             // Reset icon to play if paused via player controls
+            if (currentlyPlayingItem) {
+                const icon = currentlyPlayingItem.querySelector('.play-pause-icon i');
+                if (icon) {
+                    icon.classList.remove('fa-pause-circle');
+                    icon.classList.add('fa-play-circle');
+                    icon.classList.remove('text-sky-300');
+                    icon.classList.add('text-sky-500');
+                }
+            }
+        };
+
+        audioPlayer.onended = () => {
+            if (currentlyPlayingItem) {
+                currentlyPlayingItem.classList.remove('active-audio-item', 'bg-sky-700', 'text-white');
+                currentlyPlayingItem.classList.add('list-item-hover');
+                const icon = currentlyPlayingItem.querySelector('.play-pause-icon i');
+                 if (icon) {
+                    icon.classList.remove('fa-pause-circle');
+                    icon.classList.add('fa-play-circle');
+                    icon.classList.remove('text-sky-300');
+                    icon.classList.add('text-sky-500');
+                }
+            }
+            nowPlayingDiv.textContent = "Select an item from the library.";
+            currentlyPlayingAudioId = null;
+            currentlyPlayingItem = null;
+        };
+
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // For demonstration, create some dummy audio files if they don't exist
+            // In a real scenario, you would ensure these files are present in the 'audio' folder.
+            const audioDir = './audio/';
+            const sampleFiles = ['sample1.mp3', 'sample2.mp3', 'sample3.mp3'];
+            
+            // This is just a placeholder to remind you where to put files.
+            // It doesn't actually create files.
+            if (audioFiles.some(f => f.filePath.startsWith("audio/sample") && f.filePath.endsWith(".mp3"))) {
+                 console.info("Using sample audio file paths. Ensure 'sample1.mp3', 'sample2.mp3', etc., exist in an 'audio' folder next to your HTML file.");
+            }
+
+            renderAudioFiles();
+            if (audioFiles.length > 0) {
+                // Optional: Pre-fill "Now Playing" with the first item's details but don't autoplay
+                nowPlayingDiv.textContent = `Ready to play: ${audioFiles[0].title}`;
+                nowPlayingDiv.title = `Ready to play: ${audioFiles[0].title}`;
+            }
+        });
+
+    </script>
+</body>
+</html>
