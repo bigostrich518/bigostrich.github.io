@@ -8,8 +8,31 @@ const XCircle = () => <svg className="w-5 h-5" fill="none" stroke="currentColor"
 const Info = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>;
 const Loader2 = () => <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx={12} cy={12} r={10} strokeWidth={2}/></svg>;
 
-// Simple markdown renderer
-const ReactMarkdown = ({ children }) => <div dangerouslySetInnerHTML={{ __html: children }} />;
+// Markdown renderer with remark-gfm support
+const ReactMarkdown = ({ children }) => {
+    if (!remarkGfmPlugin) {
+        return <div className="text-center py-4">Loading markdown renderer...</div>;
+    }
+    return <div dangerouslySetInnerHTML={{ __html: children }} />;
+};
+
+// Handle markdown content
+const renderMarkdown = (content) => {
+    if (!content) return '';
+    try {
+        // Basic markdown conversion (without remark-gfm)
+        return content
+            .replace(/\n/g, '<br>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/#\s+(.+)/g, '<h1>$1</h1>')
+            .replace(/##\s+(.+)/g, '<h2>$1</h2>')
+            .replace(/###\s+(.+)/g, '<h3>$1</h3>');
+    } catch (e) {
+        console.error('Error rendering markdown:', e);
+        return content;
+    }
+};
 // remarkGfm will be dynamically imported
 
 // --- Main Application Component ---
@@ -74,15 +97,17 @@ export default function App() {
 
         const fetchContent = async () => {
             try {
-                const response = await fetch(`/data/report-content/${selectedReport.content}`);
+                // Extract the filename from contentPath
+                const filename = selectedReport.contentPath.split('/').pop();
+                const response = await fetch(`/data/report-content/${filename}`);
                 if (!response.ok) {
-                    throw new Error('Failed to load content');
+                    throw new Error(`Failed to load content: ${response.status} ${response.statusText}`);
                 }
                 const text = await response.text();
                 setSelectedReportContent(text);
             } catch (err) {
                 console.error('Error loading content:', err);
-                setError('Failed to load report content.');
+                setError(`Failed to load report content: ${err.message}`);
             }
         };
         fetchContent();
