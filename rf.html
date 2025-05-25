@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Reach & Frequency Estimator (with Target Frequency)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 12px; /* More rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Softer shadow */
+        }
+        .input-group {
+            margin-bottom: 1.5rem; /* Increased spacing */
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500; /* Medium weight */
+            color: #374151; /* Darker gray text */
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.75rem 1rem; /* Increased padding */
+            border: 1px solid #d1d5db; /* Softer border */
+            border-radius: 8px; /* More rounded inputs */
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .input-group input:focus, .input-group select:focus {
+            border-color: #2563eb; /* Blue border on focus */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Focus ring */
+            outline: none;
+        }
+        .calculate-btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem; /* Larger button padding */
+            background-color: #2563eb; /* Primary blue */
+            color: white;
+            font-weight: 600; /* Semi-bold */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+        .calculate-btn:hover {
+            background-color: #1d4ed8; /* Darker blue on hover */
+        }
+        .results-card {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f9fafb; /* Very light gray for results */
+            border: 1px solid #e5e7eb; /* Soft border for results */
+            border-radius: 8px;
+        }
+        .results-card h3 {
+            font-size: 1.25rem; /* Larger results title */
+            font-weight: 600;
+            color: #1f2937; /* Darker heading */
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.75rem;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive grid, slightly wider items */
+            gap: 1rem;
+        }
+        .result-item {
+            padding: 1rem;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .result-item p {
+            margin: 0.25rem 0;
+            color: #4b5563; /* Medium gray text */
+            font-size: 0.9rem;
+        }
+        .result-item span {
+            font-weight: 600;
+            color: #1f2937; /* Darker value text */
+            font-size: 1.1rem;
+        }
+        .disclaimer {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #fffbeb; /* Light yellow for disclaimer */
+            border: 1px solid #fef3c7; /* Yellow border */
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: #92400e; /* Amber text */
+        }
+        .disclaimer h4 {
+            font-weight: 600;
+            color: #78350f; /* Darker amber heading */
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Simple Reach & Frequency Estimator</h1>
+            <p class="text-gray-600 mt-2">Enter campaign parameters for an illustrative estimate, considering platform reach potential and target frequency.</p>
+        </header>
+
+        <div class="input-group">
+            <label for="totalBudget">Total Campaign Budget ($):</label>
+            <input type="number" id="totalBudget" placeholder="e.g., 10000" value="10000">
+        </div>
+
+        <div class="input-group">
+            <label for="targetAudienceSize">Overall Target Audience Size (e.g., Total Population in Geo):</label>
+            <input type="number" id="targetAudienceSize" placeholder="e.g., 1000000" value="1000000">
+        </div>
+
+        <div class="input-group">
+            <label for="platformReachPotentialPercent">Platform Reach Potential (% of Overall Target Audience):</label>
+            <input type="number" id="platformReachPotentialPercent" placeholder="e.g., 75" value="75" min="1" max="100">
+            <p class="text-xs text-gray-500 mt-1">What percentage of the 'Overall Target Audience' can this specific platform realistically reach? (e.g., 75% for a platform that doesn't reach everyone)</p>
+        </div>
+        
+        <div class="input-group">
+            <label for="cpm">Estimated CPM (Cost Per 1,000 Impressions) ($):</label>
+            <input type="number" id="cpm" placeholder="e.g., 17.50" value="17.50">
+            <p class="text-xs text-gray-500 mt-1">Adjust based on platform and targeting. (Sample data avg ~ $17.50 for YouTube)</p>
+        </div>
+
+        <div class="input-group"> <label for="targetFrequency">Target Average Frequency (Overall):</label>
+            <input type="number" id="targetFrequency" placeholder="e.g., 3" value="3" min="1">
+        </div>
+
+        <div class="input-group">
+            <label for="campaignDuration">Campaign Duration (Weeks):</label>
+            <input type="number" id="campaignDuration" placeholder="e.g., 4" value="4" min="1">
+        </div>
+
+        <div class="input-group">
+            <label for="assumedWeeklyReachRatio">Assumed Avg. Weekly Reported Reach (% of Est. Total Unique Reach):</label>
+            <input type="number" id="assumedWeeklyReachRatio" placeholder="e.g., 40" value="40" min="1" max="200">
+            <p class="text-xs text-gray-500 mt-1">E.g., if 40%, a typical week's reported reach will be 40% of the campaign's total unique reach. (Based on sample data, this could be 30-60%)</p>
+        </div>
+
+        <button class="calculate-btn mt-4" onclick="calculateReachFrequency()">Calculate Estimates</button>
+
+        <div id="resultsArea" class="results-card" style="display: none;">
+            <h3>Estimated Campaign Performance (Overall):</h3>
+            <div class="results-grid">
+                <div class="result-item">
+                    <p>Total Impressions:</p>
+                    <span id="totalImpressions"></span>
+                </div>
+                <div class="result-item">
+                    <p>Effective Platform Audience Size:</p> 
+                    <span id="effectiveAudienceSize"></span>
+                </div>
+                <div class="result-item">
+                    <p>Est. Total Unique Reach (on Platform):</p>
+                    <span id="estimatedReach"></span>
+                </div>
+                <div class="result-item">
+                    <p>Est. Average Frequency:</p>
+                    <span id="averageFrequency"></span>
+                </div>
+                <div class="result-item">
+                    <p>Est. Cost Per Reached User:</p>
+                    <span id="costPerReachedUser"></span>
+                </div>
+            </div>
+            <h3 class="mt-6">Estimated Weekly Performance Figures:</h3>
+             <div class="results-grid">
+                <div class="result-item">
+                    <p>Average Weekly Impressions:</p>
+                    <span id="weeklyImpressions"></span>
+                </div>
+                <div class="result-item">
+                    <p>Est. Avg. Reported Weekly Reach:</p>
+                    <span id="averageWeeklyReportedReach"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <h4>⚠️ Important Disclaimer:</h4>
+            <ul class="list-disc list-inside ml-4">
+                <li>The estimates provided by this tool are highly simplified and for illustrative purposes only.</li>
+                <li>"Est. Avg. Reported Weekly Reach" is based on the percentage you provide of the total unique reach, reflecting a typical single week's reported reach figure (which includes audience overlap across weeks).</li>
+                <li>This calculator does not use sophisticated modeling for true reach accumulation or overlap.</li>
+                <li><strong>Do not</strong> use these figures for actual media planning or budget allocation. Always consult professional planning tools from advertising platforms.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Function to format numbers with commas
+        function formatNumber(num) {
+            if (num === null || num === undefined || isNaN(num) || !isFinite(num)) return 'N/A';
+            return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Function to format currency
+        function formatCurrency(num) {
+            if (num === null || num === undefined || isNaN(num) || !isFinite(num)) return 'N/A';
+            return '$' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function calculateReachFrequency() {
+            // Get input values
+            const totalBudget = parseFloat(document.getElementById('totalBudget').value);
+            const overallTargetAudienceSize = parseFloat(document.getElementById('targetAudienceSize').value);
+            const platformReachPotentialPercent = parseFloat(document.getElementById('platformReachPotentialPercent').value);
+            const cpm = parseFloat(document.getElementById('cpm').value);
+            const targetFrequency = parseFloat(document.getElementById('targetFrequency').value); // Re-added
+            const campaignDuration = parseInt(document.getElementById('campaignDuration').value);
+            const assumedWeeklyReachRatioPercent = parseFloat(document.getElementById('assumedWeeklyReachRatio').value);
+
+            // Basic validation
+            if (isNaN(totalBudget) || totalBudget <= 0 ||
+                isNaN(overallTargetAudienceSize) || overallTargetAudienceSize <= 0 ||
+                isNaN(platformReachPotentialPercent) || platformReachPotentialPercent <= 0 || platformReachPotentialPercent > 100 ||
+                isNaN(cpm) || cpm <= 0 ||
+                isNaN(targetFrequency) || targetFrequency <= 0 || // Re-added validation
+                isNaN(campaignDuration) || campaignDuration <= 0 ||
+                isNaN(assumedWeeklyReachRatioPercent) || assumedWeeklyReachRatioPercent <= 0) {
+                alert("Please enter valid positive numbers for all inputs. Platform reach potential % must be between 1 and 100. Target Frequency and Assumed weekly reach % must be positive.");
+                // Clear previous results
+                document.getElementById('totalImpressions').textContent = 'N/A';
+                document.getElementById('effectiveAudienceSize').textContent = 'N/A';
+                document.getElementById('estimatedReach').textContent = 'N/A';
+                document.getElementById('averageFrequency').textContent = 'N/A';
+                document.getElementById('costPerReachedUser').textContent = 'N/A';
+                document.getElementById('weeklyImpressions').textContent = 'N/A';
+                document.getElementById('averageWeeklyReportedReach').textContent = 'N/A';
+                return;
+            }
+
+            // --- Calculate Effective Platform Audience Size ---
+            const effectivePlatformAudienceSize = overallTargetAudienceSize * (platformReachPotentialPercent / 100);
+
+            // --- Overall Calculations ---
+            const totalImpressions = (totalBudget / cpm) * 1000;
+            
+            // Initial Estimated Unique Reach based on Target Frequency
+            let estimatedTotalUniqueReach = 0;
+            if (targetFrequency > 0) { // Prevent division by zero if targetFrequency is somehow 0 (though validated)
+                 estimatedTotalUniqueReach = totalImpressions / targetFrequency;
+            } else if (totalImpressions > 0) { // If target frequency is 0 but there are impressions, this is an odd case.
+                // For simplicity, assume reach is effective size and frequency will be calculated.
+                // Or, one might argue reach is 0 if target frequency is 0.
+                // Let's assume if targetFrequency is 0, it implies no specific target, and we'd fall back to other logic.
+                // However, since it's validated to be >0, this branch is less likely.
+                // For now, if targetFrequency is 0 (and it passed validation, which it shouldn't), this could be an issue.
+                // The validation ensures targetFrequency > 0.
+            }
+
+
+            let finalAverageFrequency = targetFrequency; // Start with the target
+
+            // Cap reach at the *effective platform audience size*
+            if (estimatedTotalUniqueReach > effectivePlatformAudienceSize) {
+                estimatedTotalUniqueReach = effectivePlatformAudienceSize;
+                if (estimatedTotalUniqueReach > 0) { 
+                    finalAverageFrequency = totalImpressions / estimatedTotalUniqueReach; // Recalculate frequency if reach is capped
+                } else { // If effectivePlatformAudienceSize is 0, then reach is 0
+                    finalAverageFrequency = 0; 
+                }
+            } else if (effectivePlatformAudienceSize === 0) { // If platform audience is 0, reach is 0
+                estimatedTotalUniqueReach = 0;
+                finalAverageFrequency = 0;
+            }
+            // If estimatedTotalUniqueReach became 0 (e.g. from effectivePlatformAudienceSize being 0), ensure frequency is also 0.
+            if (estimatedTotalUniqueReach === 0 && totalImpressions > 0) {
+                finalAverageFrequency = 0; // Or could be considered infinite if impressions > 0 and reach = 0, but 0 is safer.
+            } else if (estimatedTotalUniqueReach === 0 && totalImpressions === 0) {
+                finalAverageFrequency = 0;
+            }
+
+
+            const costPerReachedUser = estimatedTotalUniqueReach > 0 ? totalBudget / estimatedTotalUniqueReach : 0;
+
+            // --- Weekly Reported Reach Calculation (based on ratio of total unique reach on platform) ---
+            const assumedWeeklyReachRatio = assumedWeeklyReachRatioPercent / 100;
+            const averageWeeklyReportedReach = estimatedTotalUniqueReach * assumedWeeklyReachRatio;
+
+            // Average Weekly Impressions (remains simple average of total impressions)
+            const weeklyImpressions = campaignDuration > 0 ? totalImpressions / campaignDuration : 0;
+
+
+            // --- Display Results ---
+            document.getElementById('totalImpressions').textContent = formatNumber(totalImpressions);
+            document.getElementById('effectiveAudienceSize').textContent = formatNumber(effectivePlatformAudienceSize);
+            document.getElementById('estimatedReach').textContent = formatNumber(estimatedTotalUniqueReach);
+            document.getElementById('averageFrequency').textContent = finalAverageFrequency.toFixed(1);
+            document.getElementById('costPerReachedUser').textContent = formatCurrency(costPerReachedUser);
+
+            document.getElementById('weeklyImpressions').textContent = formatNumber(weeklyImpressions);
+            document.getElementById('averageWeeklyReportedReach').textContent = formatNumber(averageWeeklyReportedReach);
+            
+            document.getElementById('resultsArea').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+
