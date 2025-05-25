@@ -1,50 +1,17 @@
-const React = require('react');
-const { useState, useEffect, useMemo } = React;
-const AlertTriangle = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>;
-const FileText = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>;
-const Search = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>;
-const Tag = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>;
-const XCircle = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/></svg>;
-const Info = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>;
-const Loader2 = () => <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx={12} cy={12} r={10} strokeWidth={2}/></svg>;
-
-// Markdown renderer with remark-gfm support
-const ReactMarkdown = ({ children }) => {
-    if (!remarkGfmPlugin) {
-        return <div className="text-center py-4">Loading markdown renderer...</div>;
-    }
-    return <div dangerouslySetInnerHTML={{ __html: children }} />;
-};
-
-// Handle markdown content
-const renderMarkdown = (content) => {
-    if (!content) return '';
-    try {
-        // Basic markdown conversion (without remark-gfm)
-        return content
-            .replace(/\n/g, '<br>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            .replace(/#\s+(.+)/g, '<h1>$1</h1>')
-            .replace(/##\s+(.+)/g, '<h2>$1</h2>')
-            .replace(/###\s+(.+)/g, '<h3>$1</h3>');
-    } catch (e) {
-        console.error('Error rendering markdown:', e);
-        return content;
-    }
-};
+import React, { useState, useEffect, useMemo } from 'react';
+import { AlertTriangle, FileText, Search, Tag, XCircle, Info, Loader2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 // remarkGfm will be dynamically imported
 
 // --- Main Application Component ---
 export default function App() {
     // Application state
-    const [reportsMetadata, setReportsMetadata] = useState([]);
-    const [selectedReport, setSelectedReport] = useState(null);
-    const [selectedReportContent, setSelectedReportContent] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [error, setError] = useState(null);
+    const [reportsMetadata, setReportsMetadata] = useState([]); // Stores the initial list from reports.json
+    const [selectedReport, setSelectedReport] = useState(null); // Holds metadata of selected report
+    const [selectedReportContent, setSelectedReportContent] = useState(''); // Holds fetched MD content
     const [isReportContentLoading, setIsReportContentLoading] = useState(false);
-    const [isLoading, setIsLoading] = useState(true); // Initial load of metadata 
+    const [isLoading, setIsLoading] = useState(true); // Initial load of metadata
+    const [error, setError] = useState(null); 
     
     // Search and Filter state
     const [searchTerm, setSearchTerm] = useState('');
@@ -61,66 +28,86 @@ export default function App() {
             })
             .catch(err => {
                 console.error("Failed to load remark-gfm:", err);
+                // It's okay to proceed without it, Markdown will still render.
             });
     }, []);
 
     // Load reports metadata from JSON file on initial mount
     useEffect(() => {
         setIsLoading(true);
-        const reportsJsonUrl = new URL('data/reports.json', window.location.origin).href;
-        fetch(reportsJsonUrl)
+        // Use a direct relative path for fetching reports.json
+        // This assumes 'data/reports.json' is accessible relative to the HTML file hosting this React app.
+        // For your structure (personalsite/data/reports.json and personalsite/reportmanager.html), this is 'data/reports.json'.
+        fetch('data/reports.json') 
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} - Did you create public/data/reports.json? Attempted to load from ${reportsJsonUrl}`);
+                    throw new Error(`HTTP error! status: ${response.status} - Failed to load 'data/reports.json'. Ensure the file exists in your public/data/ folder or equivalent accessible path.`);
                 }
                 return response.json();
             })
             .then(data => {
-                setReportsMetadata(data);
+                const reportsWithDates = data.map(report => ({
+                    ...report,
+                    createdAt: report.createdAt ? new Date(report.createdAt) : null,
+                }));
+                reportsWithDates.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
+                setReportsMetadata(reportsWithDates);
                 setError(null);
             })
-            .catch(err => {
-                console.error('Error loading reports:', err);
-                setError('Failed to load reports. Please check if reports.json exists.');
+            .catch(e => {
+                console.error("Error loading reports metadata from JSON:", e);
+                setError(`Could not load reports metadata: ${e.message}. Check the path and file format. Ensure the app is served via HTTP/HTTPS, not file:/// protocol, and that the execution environment can resolve relative paths for fetch.`);
+                setReportsMetadata([]);
             })
             .finally(() => {
                 setIsLoading(false);
             });
     }, []);
 
-    // Fetch and render markdown content when a report is selected
+    // Fetch content when a report is selected
     useEffect(() => {
-        if (!selectedReport) {
-            setSelectedReportContent('');
-            return;
-        }
+        if (selectedReport && selectedReport.contentPath) {
+            setIsReportContentLoading(true);
+            setSelectedReportContent(''); // Clear previous content
+            
+            // Use the contentPath directly. It should be relative to the HTML file hosting the React app.
+            // e.g., "data/report-content/your-file.md"
+            const contentPath = selectedReport.contentPath; 
 
-        const fetchContent = async () => {
-            try {
-                // Extract the filename from contentPath
-                const filename = selectedReport.contentPath.split('/').pop();
-                const response = await fetch(`/data/report-content/${filename}`);
-                if (!response.ok) {
-                    throw new Error(`Failed to load content: ${response.status} ${response.statusText}`);
-                }
-                const text = await response.text();
-                setSelectedReportContent(text);
-            } catch (err) {
-                console.error('Error loading content:', err);
-                setError(`Failed to load report content: ${err.message}`);
-            }
-        };
-        fetchContent();
+            fetch(contentPath)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status} - Failed to load content from '${contentPath}'. Ensure the file exists at this path relative to your HTML file.`);
+                    }
+                    return response.text();
+                })
+                .then(markdownContent => {
+                    setSelectedReportContent(markdownContent);
+                })
+                .catch(e => {
+                    console.error(`Error fetching report content from ${contentPath}:`, e);
+                    setSelectedReportContent(`Failed to load report content: ${e.message}. Check the path: ${contentPath}`);
+                })
+                .finally(() => {
+                    setIsReportContentLoading(false);
+                });
+        } else {
+            setSelectedReportContent(''); // Clear content if no report selected or no contentPath
+        }
     }, [selectedReport]);
 
-    // Filter reports based on search term and tags
+
     const filteredReportsMetadata = useMemo(() => {
-        if (!reportsMetadata?.length) return [];
-        
+        // Search now applies only to metadata (title, description, tags)
         return reportsMetadata.filter(report => {
-            const matchesSearch = report.title.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesTags = selectedTags.length === 0 || 
-                selectedTags.every(tag => report.tags?.includes(tag));
+            const searchLower = searchTerm.toLowerCase();
+            const matchesSearch = (
+                report.title.toLowerCase().includes(searchLower) ||
+                (report.description && report.description.toLowerCase().includes(searchLower)) ||
+                (report.tags && report.tags.some(tag => tag.toLowerCase().includes(searchLower)))
+            );
+            const matchesTags = activeFilters.tags.length === 0 || 
+                                (report.tags && report.tags.some(tag => activeFilters.tags.map(ft => ft.toLowerCase()).includes(tag.toLowerCase())));
             return matchesSearch && matchesTags;
         });
     }, [reportsMetadata, searchTerm, activeFilters.tags]);
@@ -149,12 +136,14 @@ export default function App() {
             return text;
         }
         try {
-            const regex = new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            // Escape special characters in highlight term for regex
+            const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(${escapedHighlight})`, 'gi');
             const parts = String(text).split(regex);
             return (
                 <>
                     {parts.map((part, i) => 
-                        regex.test(part) ? <mark key={i} className="bg-yellow-300 dark:bg-yellow-500 px-0.5 rounded">{part}</mark> : part
+                        regex.test(part) && part.toLowerCase() === highlight.toLowerCase() ? <mark key={i} className="bg-yellow-300 dark:bg-yellow-500 px-0.5 rounded">{part}</mark> : part
                     )}
                 </>
             );
@@ -191,7 +180,7 @@ export default function App() {
                 <AlertTriangle className="h-16 w-16 text-red-500 dark:text-red-400 mb-4" />
                 <h2 className="text-2xl font-semibold mb-2">Failed to Load Reports Index</h2>
                 <p className="text-center max-w-md">{error}</p>
-                <p className="text-xs mt-2">Please ensure `public/data/reports.json` (and content files) exist and are correctly formatted and accessible.</p>
+                <p className="text-xs mt-2">Please ensure `public/data/reports.json` (and content files) exist, are correctly formatted, and accessible at the expected paths. If running locally, try serving the project with a simple HTTP server.</p>
             </div>
         );
     }
