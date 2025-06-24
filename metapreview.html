@@ -34,34 +34,41 @@
 
         <div class="flex flex-col lg:flex-row gap-8">
 
+            <!-- CONTROLS PANEL -->
             <div class="lg:w-1/3 bg-white p-6 rounded-lg shadow-md h-fit">
                 <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">Ad Content</h2>
                 <div class="space-y-5">
+                    <!-- Page Name -->
                     <div>
                         <label for="pageName" class="block text-sm font-medium text-gray-700 mb-1">Page Name</label>
                         <input type="text" id="pageName" value="Your Brand Name" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
+                    <!-- Paid for by Disclaimer -->
                     <div>
                         <label for="paidForBy" class="block text-sm font-medium text-gray-700 mb-1">"Paid for by" Disclaimer</label>
                         <input type="text" id="paidForBy" value="Spanberger for Governor" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
+                    <!-- Primary Ad Copy -->
                     <div>
                         <label for="primaryText" class="block text-sm font-medium text-gray-700 mb-1">Primary Ad Copy</label>
                         <textarea id="primaryText" rows="4" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">Discover our new collection! We've crafted the perfect products to fit your lifestyle. Tap "Shop Now" to explore the latest trends.</textarea>
                     </div>
 
+                    <!-- Headline -->
                     <div>
                         <label for="headline" class="block text-sm font-medium text-gray-700 mb-1">Headline</label>
                         <input type="text" id="headline" value="Amazing New Products Are Here!" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
+                    <!-- Website Link -->
                     <div>
                         <label for="websiteLink" class="block text-sm font-medium text-gray-700 mb-1">Website Link</label>
                         <input type="text" id="websiteLink" value="YOURBRAND.COM" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
+                    <!-- Call to Action -->
                     <div>
                         <label for="ctaButton" class="block text-sm font-medium text-gray-700 mb-1">Call to Action (CTA)</label>
                         <select id="ctaButton" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
@@ -75,18 +82,21 @@
                         </select>
                     </div>
 
+                    <!-- Page Profile Picture -->
                     <div>
                         <label for="profilePicInput" class="block text-sm font-medium text-gray-700 mb-2">Page Profile Picture</label>
                         <input type="file" id="profilePicInput" class="hidden" accept="image/*">
                         <label for="profilePicInput" class="file-input-button">Choose Image</label>
                     </div>
 
+                    <!-- Ad Creative -->
                     <div>
                         <label for="adCreativeInput" class="block text-sm font-medium text-gray-700 mb-2">Ad Creative (Image)</label>
                         <input type="file" id="adCreativeInput" class="hidden" accept="image/*">
                         <label for="adCreativeInput" class="file-input-button">Choose Image</label>
                     </div>
 
+                    <!-- Reset Button -->
                     <div class="border-t pt-5 mt-5">
                         <button id="resetButton" class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-md hover:bg-red-700 transition-colors">
                             Clear / Reset Preview
@@ -95,8 +105,10 @@
                 </div>
             </div>
 
+            <!-- PREVIEW PANEL -->
             <div class="lg:w-2/3 flex justify-center">
                 <div class="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+                    <!-- Ad Header -->
                     <div class="p-3 flex items-center justify-between">
                         <div class="flex items-center">
                             <img id="previewProfilePic" src="https://placehold.co/40x40/E2E8F0/4A5568?text=Logo" class="w-10 h-10 rounded-full object-cover" alt="Profile Picture">
@@ -116,12 +128,15 @@
                         </svg>
                     </div>
 
+                    <!-- Ad Copy -->
                     <div id="previewPrimaryText" class="px-3 pb-2 text-sm text-gray-800 whitespace-pre-wrap">Discover our new collection! We've crafted the perfect products to fit your lifestyle. Tap "Shop Now" to explore the latest trends.</div>
 
+                    <!-- Ad Creative Image -->
                     <div class="w-full bg-gray-200">
                          <img id="previewAdCreative" src="https://placehold.co/600x600/CBD5E0/4A5568?text=Ad+Creative" class="w-full h-auto object-cover" alt="Ad Creative">
                     </div>
 
+                    <!-- Ad Information Bar -->
                     <div class="bg-gray-50 px-3 py-2 flex justify-between items-center border-t border-gray-200">
                         <div class="flex-grow">
                             <p id="previewWebsiteLink" class="text-xs text-gray-500 uppercase">YOURBRAND.COM</p>
@@ -130,20 +145,21 @@
                         <button id="previewCtaButton" class="bg-gray-200 text-gray-800 font-bold text-xs py-2 px-4 rounded">Shop Now</button>
                     </div>
 
-                    <div class="px-3 py-1 flex justify-around border-t border-gray-200 text-gray-600">
-                        <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+                    <!-- Ad Actions -- FIXED -->
+                    <div class="flex border-t border-gray-200 text-gray-600">
+                        <div class="flex flex-1 justify-center items-center space-x-1 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.102-.827a3.001 3.001 0 00-1.991.542c-.837.649-1.98.936-3.131.936H4.5a2.25 2.25 0 01-2.25-2.25V10.5c0-.621.504-1.125 1.125-1.125h2.008z"></path>
                             </svg>
                             <span class="text-sm font-semibold">Like</span>
                         </div>
-                        <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+                        <div class="flex flex-1 justify-center items-center space-x-1 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                            </svg>
                             <span class="text-sm font-semibold">Comment</span>
                         </div>
-                        <div class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+                        <div class="flex flex-1 justify-center items-center space-x-1 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.368a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                            </svg>
