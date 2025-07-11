@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRP & TRP Calculator (Card UI)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Bolder, higher-contrast labels */
+        .input-label {
+            @apply block mb-2 text-sm font-extrabold text-gray-900 uppercase tracking-wider;
+        }
+        /* Input fields with a more visible default state */
+        .input-field {
+            @apply w-full bg-slate-100 border-2 border-slate-200 text-gray-900 text-base rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 block p-3 transition-all duration-200 shadow-inner;
+        }
+        /* Bolder, consistent output labels */
+        .output-label {
+            @apply block mb-2 text-sm font-extrabold text-gray-900 uppercase tracking-wider text-center;
+        }
+        .calculated-field {
+            @apply w-full bg-slate-200 text-slate-800 text-xl rounded-md block p-2.5 font-bold text-center;
+        }
+        .remove-btn {
+            @apply text-gray-400 hover:text-red-600 transition-colors duration-200;
+        }
+        .add-btn {
+            @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-transform duration-200 transform hover:scale-105 shadow-md hover:shadow-lg;
+        }
+        .title-input {
+             @apply text-xl font-bold text-gray-800 bg-transparent focus:bg-gray-50 rounded-md p-2 -ml-2 w-2/3 border-2 border-transparent focus:border-blue-300 focus:outline-none transition-colors duration-200;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Digital Marketing Points Calculator</h1>
+            <p class="text-md text-gray-600 mt-2">A card-based calculator for your media planning needs.</p>
+        </header>
+
+        <!-- Container for all the demographic cards -->
+        <div id="calculator-body" class="space-y-6">
+            <!-- Demographic cards will be dynamically inserted here -->
+        </div>
+
+        <div class="mt-8 flex justify-center">
+            <button id="add-card-btn" class="add-btn">
+                <svg class="inline-block w-5 h-5 mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Add Demographic
+            </button>
+        </div>
+
+        <footer class="text-center mt-12 text-sm text-gray-500">
+            <p>&copy; 2024 GRP & TRP Calculator. Built to simplify your media planning.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const calculatorBody = document.getElementById('calculator-body');
+            const addCardBtn = document.getElementById('add-card-btn');
+
+            // --- INITIAL DATA ---
+            const initialData = [
+                { channel: 'Streaming 18+', population: '', cpm: 37.50, impressions: '' },
+            ];
+
+            // --- CORE FUNCTIONS ---
+
+            /**
+             * Formats a number into a standard currency string (e.g., $1,234.56)
+             * @param {number} value The number to format.
+             * @returns {string} The formatted currency string.
+             */
+            const formatCurrency = (value) => {
+                if (isNaN(value) || !isFinite(value)) return '$0.00';
+                return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+            };
+
+            /**
+             * --- NEW ---
+             * Formats a number into a currency string with no decimal points (e.g., $1,235)
+             * @param {number} value The number to format.
+             * @returns {string} The formatted whole dollar currency string.
+             */
+            const formatWholeCurrency = (value) => {
+                if (isNaN(value) || !isFinite(value)) return '$0';
+                return value.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+            };
+            
+            const formatNumber = (value) => {
+                if (isNaN(value) || !isFinite(value)) return '0.00';
+                return value.toFixed(2);
+            }
+
+            /**
+             * Recalculates all derived values for a given demographic card.
+             * @param {HTMLDivElement} card The card element to perform calculations on.
+             */
+            const calculateCard = (card) => {
+                const populationInput = card.querySelector('.population-input');
+                const cpmInput = card.querySelector('.cpm-input');
+                const impressionsInput = card.querySelector('.impressions-input');
+
+                const population = parseFloat(populationInput.value) || 0;
+                const cpm = parseFloat(cpmInput.value) || 0;
+                const impressions = parseFloat(impressionsInput.value) || 0;
+
+                const grpsDisplay = card.querySelector('.grps-display');
+                const costDisplay = card.querySelector('.cost-display');
+                const cppDisplay = card.querySelector('.cpp-display');
+
+                const cpp = (cpm > 0 && population > 0) ? (cpm * population) / 100000 : 0;
+                // --- UPDATED: Use the new whole number formatter for Cost Per Point ---
+                cppDisplay.textContent = formatWholeCurrency(cpp);
+
+                const grps = population > 0 ? (impressions / population) * 100 : 0;
+                grpsDisplay.textContent = formatNumber(grps);
+
+                const totalCost = (impressions / 1000) * cpm;
+                // Total Cost still uses the standard currency format with decimals
+                costDisplay.textContent = formatCurrency(totalCost);
+            };
+
+            /**
+             * Creates and appends a new demographic card to the calculator.
+             * @param {object} [data] Optional data to pre-fill the card with.
+             */
+            const addDemographicCard = (data = {}) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-lg p-5 transition-all duration-300';
+                
+                const { channel = '', population = '', cpm = '', impressions = '' } = data;
+                const uniqueId = crypto.randomUUID(); // Create a unique ID for labels
+
+                card.innerHTML = `
+                    <!-- Card Header: Channel Name and Remove Button -->
+                    <div class="flex justify-between items-center mb-4">
+                        <input type="text" class="title-input" placeholder="Enter Demographic Name" value="${channel}">
+                        <button class="remove-btn p-1" title="Remove Demographic">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Input Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                        <div>
+                            <label class="input-label" for="pop-${uniqueId}">Population</label>
+                            <input type="number" id="pop-${uniqueId}" class="input-field population-input" placeholder="e.g., 6,800,000" value="${population}">
+                        </div>
+                        <div>
+                            <label class="input-label" for="cpm-${uniqueId}">CPM</label>
+                            <input type="number" step="0.01" id="cpm-${uniqueId}" class="input-field cpm-input" placeholder="e.g., 37.50" value="${cpm}">
+                        </div>
+                        <div>
+                            <label class="input-label" for="imp-${uniqueId}">Impressions</label>
+                            <input type="number" id="imp-${uniqueId}" class="input-field impressions-input" placeholder="e.g., 13,000,000" value="${impressions}">
+                        </div>
+                    </div>
+
+                    <hr class="my-4 border-gray-200">
+
+                    <!-- Calculated Output Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <label class="output-label">GRPs / TRPs</label>
+                            <span class="calculated-field grps-display">0.00</span>
+                        </div>
+                        <div class="text-center">
+                            <label class="output-label">Total Cost</label>
+                            <span class="calculated-field cost-display">$0.00</span>
+                        </div>
+                        <div class="text-center">
+                            <label class="output-label">Cost Per Point</label>
+                            <span class="calculated-field cpp-display">$0</span>
+                        </div>
+                    </div>
+                `;
+
+                calculatorBody.appendChild(card);
+                
+                card.addEventListener('input', () => calculateCard(card));
+                
+                card.querySelector('.remove-btn').addEventListener('click', () => {
+                    card.style.transform = 'scale(0.95)';
+                    card.style.opacity = '0';
+                    setTimeout(() => card.remove(), 300); 
+                });
+
+                calculateCard(card);
+            };
+
+            // --- INITIALIZATION ---
+            initialData.forEach(data => addDemographicCard(data));
+            addCardBtn.addEventListener('click', () => addDemographicCard());
+        });
+    </script>
+</body>
+</html>
