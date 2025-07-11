@@ -1,0 +1,149 @@
+import React, { useState, useEffect } from 'react';
+import { Target, TrendingUp, Repeat } from 'lucide-react';
+
+// Main App Component
+export default function App() {
+  // State for user inputs and calculated metrics
+  const [grps, setGrps] = useState(100);
+  const [maxReach, setMaxReach] = useState(70); // Max reach is now state, defaulting to 70
+  const [reach, setReach] = useState(0);
+  const [frequency, setFrequency] = useState(0);
+
+  // Constant for the reach model's curve shape
+  const K_FACTOR = 0.0065;
+
+  // Effect hook to recalculate when GRPs or maxReach change
+  useEffect(() => {
+    const calculateMetrics = () => {
+      const grpsValue = Number(grps);
+      const maxReachValue = Number(maxReach);
+
+      // Validate inputs before calculating
+      if (isNaN(grpsValue) || grpsValue < 0 || isNaN(maxReachValue) || maxReachValue <= 0 || maxReachValue > 100) {
+        setReach(0);
+        setFrequency(0);
+        return;
+      }
+
+      // --- Reach Calculation ---
+      // The formula now uses the 'maxReachValue' from the state.
+      // Reach = MaxReach * (1 - e^(-k * GRPs))
+      const calculatedReach = maxReachValue * (1 - Math.exp(-K_FACTOR * grpsValue));
+      
+      // --- Frequency Calculation ---
+      // Frequency = Total GRPs / Reach Percentage
+      const calculatedFrequency = calculatedReach > 0 ? grpsValue / calculatedReach : 0;
+
+      setReach(calculatedReach);
+      setFrequency(calculatedFrequency);
+    };
+
+    calculateMetrics();
+  }, [grps, maxReach]); // Dependency array now includes maxReach
+
+  // Handlers for input changes
+  const handleGrpChange = (e) => {
+    setGrps(e.target.value);
+  };
+
+  const handleMaxReachChange = (e) => {
+    setMaxReach(e.target.value);
+  };
+
+  return (
+    <div className="bg-slate-50 min-h-screen flex items-center justify-center font-sans p-4">
+      <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8">
+        
+        <div className="text-center mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-800">GRP Estimator</h1>
+          <p className="text-slate-500 mt-2">Estimate Reach & Frequency</p>
+        </div>
+
+        {/* Inputs Section */}
+        <div className="space-y-6 mb-8">
+          {/* GRP Input */}
+          <div>
+            <label htmlFor="grps-input" className="block text-sm font-medium text-slate-600 mb-2">
+              Gross Rating Points (GRPs)
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <TrendingUp className="h-5 w-5 text-slate-400" />
+              </div>
+              <input
+                type="number"
+                id="grps-input"
+                value={grps}
+                onChange={handleGrpChange}
+                placeholder="Enter GRPs"
+                className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              />
+            </div>
+          </div>
+          
+          {/* Max Reach Input - NEW */}
+          <div>
+            <label htmlFor="max-reach-input" className="block text-sm font-medium text-slate-600 mb-2">
+              Max Reach (%)
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <Target className="h-5 w-5 text-slate-400" />
+              </div>
+              <input
+                type="number"
+                id="max-reach-input"
+                value={maxReach}
+                onChange={handleMaxReachChange}
+                placeholder="e.g., 70"
+                min="1"
+                max="100"
+                className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Results Display Section */}
+        <div className="bg-slate-100 rounded-lg p-6 space-y-5">
+          <h2 className="text-lg font-semibold text-slate-700 text-center mb-4">Estimated Results</h2>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="bg-indigo-100 text-indigo-600 rounded-full p-2 mr-4">
+                <Target className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="font-semibold text-slate-800">Reach</p>
+                <p className="text-xs text-slate-500">Unique audience reached</p>
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-indigo-600">
+              {reach.toFixed(1)}%
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="bg-teal-100 text-teal-600 rounded-full p-2 mr-4">
+                <Repeat className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="font-semibold text-slate-800">Frequency</p>
+                <p className="text-xs text-slate-500">Average exposures per person</p>
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-teal-600">
+              {frequency.toFixed(1)}x
+            </p>
+          </div>
+        </div>
+        
+        <div className="text-center mt-6">
+            <p className="text-xs text-slate-400">Model assumes a max reach of {maxReach || '0'}%.</p>
+        </div>
+
+      </div>
+    </div>
+  );
+}
